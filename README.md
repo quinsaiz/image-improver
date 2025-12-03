@@ -36,13 +36,9 @@ pip install -r requirements.txt
 
 1. Place your files (PNG, JPG, JPEG, ICO) in the same folder as the script.
 
-2. Run
+2. Run:
     ```bash
     python main.py
     ```
 
 3. Enhanced files appear in the `output` folder.
-
-### Tip
-
-For very noisy fonts try `scale_factor=6` (slower but cleaner).

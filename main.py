@@ -1,7 +1,7 @@
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, ImageFilter
 from pathlib import Path
 
-def improve_image(input_path: Path, output_path: Path, scale_factor: int = 4):
+def improve_image(input_path: Path, output_path: Path, scale_factor: int = 16):
     print(f"Processing: {input_path.name}")
 
     try:
@@ -18,11 +18,14 @@ def improve_image(input_path: Path, output_path: Path, scale_factor: int = 4):
 
         # Aggressive sharpening on high-res alpha (makes letters crisp)
         print("  • Sharpening edges on high-res alpha...")
-        a = ImageEnhance.Sharpness(a).enhance(3.0)   # 2.5–4.0 works great
+        a = ImageEnhance.Sharpness(a).enhance(3.5)   # 2.5–4.0 works great
+
+        # Apply Gaussian blur to alpha for subpixel anti-aliasing
+        a = a.filter(ImageFilter.GaussianBlur(radius=0.8))
 
         # Optional: extra contrast before sharpening (uncomment if font is very noisy/old)
-        #a = ImageEnhance.Contrast(a).enhance(1.2)
-        #a = ImageEnhance.Sharpness(a).enhance(3.0)
+        a = ImageEnhance.Contrast(a).enhance(1.3)
+        a = ImageEnhance.Sharpness(a).enhance(3.5)
 
         # Merge back and downscale with Lanczos (best anti-aliased result)
         img_hr = Image.merge("RGBA", (r, g, b, a))
